@@ -1,0 +1,10 @@
+synthefy@ file://{env:SYNTHEFY_PACKAGE_BASE}/synthefy
+pandas>=1.5.0
+numpy>=1.20.0
+pyright>=1.1.406
+
+[dev]
+pytest>=7.0.0
+black>=22.0.0
+flake8>=4.0.0
+mypy>=0.950

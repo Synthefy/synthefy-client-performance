@@ -1,3 +1,28 @@
+Metadata-Version: 2.4
+Name: synthefy-client-examples
+Version: 0.1.0
+Summary: Example scripts demonstrating Synthefy client usage
+Author-email: Synthefy <contact@synthefy.com>
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: synthefy@ file://{env:SYNTHEFY_PACKAGE_BASE}/synthefy
+Requires-Dist: pandas>=1.5.0
+Requires-Dist: numpy>=1.20.0
+Requires-Dist: pyright>=1.1.406
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=22.0.0; extra == "dev"
+Requires-Dist: flake8>=4.0.0; extra == "dev"
+Requires-Dist: mypy>=0.950; extra == "dev"
+
 # Synthefy Client Examples
 
 This directory contains example scripts demonstrating how to use the Synthefy Python client to make forecast requests to the `/api/v2/foundation_models/forecast/stream` endpoint.

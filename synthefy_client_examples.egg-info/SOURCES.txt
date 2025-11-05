@@ -1,0 +1,7 @@
+README.md
+pyproject.toml
+synthefy_client_examples.egg-info/PKG-INFO
+synthefy_client_examples.egg-info/SOURCES.txt
+synthefy_client_examples.egg-info/dependency_links.txt
+synthefy_client_examples.egg-info/requires.txt
+synthefy_client_examples.egg-info/top_level.txt
