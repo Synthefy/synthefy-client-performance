@@ -7,6 +7,8 @@ with various parameter combinations, measuring latency statistics.
 """
 
 import argparse
+import csv
+import os
 import sys
 import time
 from typing import List, Tuple
@@ -354,6 +356,115 @@ def print_results_table(results: List[dict]):
     print("=" * len(header))
 
 
+def get_csv_fieldnames() -> List[str]:
+    """Get the CSV field names."""
+    return [
+        "device",
+        "forecast_length",
+        "num_scenarios",
+        "mean",
+        "median",
+        "p95",
+        "std_dev",
+        "total",
+        "success",
+    ]
+
+
+def initialize_csv_file(output_file: str):
+    """
+    Initialize CSV file with headers if it doesn't exist.
+
+    Parameters
+    ----------
+    output_file : str
+        Path to the output CSV file
+    """
+    if not os.path.exists(output_file):
+        fieldnames = get_csv_fieldnames()
+        with open(output_file, "w", newline="") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+
+
+def append_result_to_csv(result: dict, output_file: str):
+    """
+    Append a single result to the CSV file.
+
+    Parameters
+    ----------
+    result : dict
+        Result dictionary containing performance statistics
+    output_file : str
+        Path to the output CSV file
+    """
+    fieldnames = get_csv_fieldnames()
+    stats = result["stats"]
+    row = {
+        "device": result["device"],
+        "forecast_length": result["forecast_length"],
+        "num_scenarios": result["num_scenarios"],
+        "mean": stats.get("mean") if stats.get("mean") is not None else "",
+        "median": stats.get("median")
+        if stats.get("median") is not None
+        else "",
+        "p95": stats.get("p95") if stats.get("p95") is not None else "",
+        "std_dev": stats.get("std_dev")
+        if stats.get("std_dev") is not None
+        else "",
+        "total": stats.get("total") if stats.get("total") is not None else "",
+        "success": result["success"],
+    }
+
+    with open(output_file, "a", newline="") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writerow(row)
+        csvfile.flush()  # Ensure data is written immediately
+
+
+def save_results_to_csv(results: List[dict], output_file: str):
+    """
+    Save performance test results to a CSV file (for backward compatibility).
+
+    Parameters
+    ----------
+    results : List[dict]
+        List of result dictionaries containing performance statistics
+    output_file : str
+        Path to the output CSV file
+    """
+    fieldnames = get_csv_fieldnames()
+
+    with open(output_file, "w", newline="") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+        for result in results:
+            stats = result["stats"]
+            row = {
+                "device": result["device"],
+                "forecast_length": result["forecast_length"],
+                "num_scenarios": result["num_scenarios"],
+                "mean": stats.get("mean")
+                if stats.get("mean") is not None
+                else "",
+                "median": stats.get("median")
+                if stats.get("median") is not None
+                else "",
+                "p95": stats.get("p95") if stats.get("p95") is not None else "",
+                "std_dev": stats.get("std_dev")
+                if stats.get("std_dev") is not None
+                else "",
+                "total": stats.get("total")
+                if stats.get("total") is not None
+                else "",
+                "success": result["success"],
+            }
+            writer.writerow(row)
+
+    print(f"\nResults saved to CSV: {output_file}")
+
+
 def main():
     """Main function to run performance tests."""
     parser = argparse.ArgumentParser(
@@ -401,6 +512,12 @@ def main():
         default=15,
         help="Total number of runs per test (default: 15)",
     )
+    parser.add_argument(
+        "--output-csv",
+        type=str,
+        default=None,
+        help="Path to CSV file to save results (default: None, no CSV output)",
+    )
 
     args = parser.parse_args()
 
@@ -411,14 +528,13 @@ def main():
     ]
 
     forecast_lengths = [10, 100, 1000]
-    history_length = 100
     num_scenarios_list = [1, 2, 4, 8, 16]
 
     print("Synthefy Forecasting API Performance Test")
     print("=" * 60)
     print(f"GPU Endpoint: {args.gpu_url} (model: {args.gpu_model})")
     print(f"CPU Endpoint: {args.cpu_url} (model: {args.cpu_model})")
-    print(f"History Length: {history_length}")
+    print("History Length: 20% more than forecast length (dynamic)")
     print(f"Forecast Lengths: {forecast_lengths}")
     print(f"Number of Scenarios: {num_scenarios_list}")
     print(
@@ -428,6 +544,11 @@ def main():
 
     results = []
     first_result = True  # Track if this is the first result for real-time table
+
+    # Initialize CSV file if output is requested
+    if args.output_csv:
+        initialize_csv_file(args.output_csv)
+        print(f"CSV output enabled: {args.output_csv}")
 
     # Run tests for each device
     for device in devices:
@@ -442,11 +563,14 @@ def main():
 
         # Run tests for each forecast length
         for forecast_length in forecast_lengths:
+            # Calculate history length as 20% more than forecast length
+            history_length = int(forecast_length * 1.2)
+
             # Run tests for each number of scenarios
             for num_scenarios in num_scenarios_list:
                 print(
                     f"\n  Testing: {device_name} | Forecast={forecast_length} | "
-                    f"Scenarios={num_scenarios}"
+                    f"History={history_length} | Scenarios={num_scenarios}"
                 )
 
                 latencies, success = run_performance_test(
@@ -470,6 +594,10 @@ def main():
                     "success": success,
                 }
                 results.append(result)
+
+                # Save result to CSV immediately if requested
+                if args.output_csv:
+                    append_result_to_csv(result, args.output_csv)
 
                 # Print real-time result
                 if success and latencies:
@@ -496,6 +624,10 @@ def main():
 
     # Print summary table
     print_results_table(results)
+
+    # Save results to CSV if requested
+    if args.output_csv:
+        save_results_to_csv(results, args.output_csv)
 
     print("\n" + "=" * 60)
     print("Performance test completed!")
