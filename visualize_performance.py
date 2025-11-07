@@ -196,23 +196,24 @@ def create_visualization(
                         f"{value:.2f}",
                         ha="center",
                         va="bottom",
-                        fontsize=8,
+                        fontsize=11,
                         fontweight="bold",
                     )
 
     # Customize the plot
-    ax.set_xlabel("Forecast Length", fontsize=12, fontweight="bold")
-    ax.set_ylabel("Median Latency (seconds)", fontsize=12, fontweight="bold")
+    ax.set_xlabel("Forecast Length (Horizon)", fontsize=16, fontweight="bold", labelpad=20)
+    ax.set_ylabel("Median Latency (seconds)", fontsize=16, fontweight="bold")
     ax.set_title(
         "Performance Comparison: GPU vs CPU\nMedian Latency by Forecast Length and Scenario Count",
-        fontsize=14,
+        fontsize=18,
         fontweight="bold",
         pad=20,
     )
 
-    # Set x-axis ticks and labels
+    # Set x-axis ticks and labels with "Horizon:" prefix
     ax.set_xticks(x)
-    ax.set_xticklabels(forecast_lengths)
+    ax.set_xticklabels([f"Horizon: {fl}" for fl in forecast_lengths], fontsize=14)
+    ax.tick_params(axis='y', labelsize=14)
 
     # Add "Lower is better" note in top right corner
     ax.text(
@@ -222,7 +223,7 @@ def create_visualization(
         transform=ax.transAxes,
         ha="right",
         va="top",
-        fontsize=10,
+        fontsize=13,
         style="italic",
         bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8, edgecolor="gray"),
     )
@@ -230,8 +231,8 @@ def create_visualization(
     # Add legend
     ax.legend(
         title="Device",
-        title_fontsize=11,
-        fontsize=10,
+        title_fontsize=14,
+        fontsize=13,
         loc="upper left",
         framealpha=0.9,
     )
@@ -245,17 +246,41 @@ def create_visualization(
     y_max = ax.get_ylim()[1]
     ax.set_ylim(top=y_max * 1.1)  # Add 10% margin at top for labels
 
-    # Add scenario count annotations below x-axis labels
-    # This helps identify which bars correspond to which scenario count
-    scenario_labels = [f"Scenarios: {', '.join(map(str, scenario_counts))}"]
+    # Add scenario count labels below each group of bars
+    # Get the transform that uses data coordinates for x and axes coordinates for y
+    trans = ax.get_xaxis_transform()
+    for i, scenario in enumerate(scenario_counts):
+        # Base position for this scenario group within the forecast length
+        scenario_base = (
+            x
+            - (total_width / 2)
+            + (i * scenario_group_width)
+            + (scenario_group_width / 2)
+        )
+        # Add label at the center of each scenario group, below the x-axis
+        for fl_idx in range(len(forecast_lengths)):
+            ax.text(
+                scenario_base[fl_idx],
+                -0.05,  # Position below x-axis (5% below in axes coordinates)
+                f"Scenarios: {scenario}",
+                ha="center",
+                va="top",
+                fontsize=12,
+                fontweight="bold",
+                color="black",
+                transform=trans,
+            )
+
+    # Add note explaining labels
     ax.text(
         0.5,
-        -0.08,
-        "  ".join(scenario_labels),
+        -0.15,
+        "X-axis shows forecast horizon length | Numbers below bars show scenario count",
         transform=ax.transAxes,
         ha="center",
-        fontsize=9,
+        fontsize=11,
         style="italic",
+        color="gray",
     )
 
     # Adjust layout to prevent label cutoff
