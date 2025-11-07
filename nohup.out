@@ -1,0 +1,236 @@
+  ⚠️  Run 3 failed: InternalServerError: <html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+</body>
+</html>
+  ⚠️  Run 12 failed: InternalServerError: <html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+</body>
+</html>
+Synthefy Forecasting API Performance Test
+============================================================
+GPU Endpoint: http://internal-synthefy-api-private-f-api-1652544088.us-east-2.elb.amazonaws.com (model: sfm-moe-v1)
+CPU Endpoint: http://internal-synthefy-api-private-fapg-1381866382.us-east-2.elb.amazonaws.com (model: sfm-moe-v1)
+History Length: 20% more than forecast length (dynamic)
+Forecast Lengths: [10, 100]
+Number of Scenarios: [1, 2, 4]
+Runs per test: 15 (discarding first 5)
+============================================================
+CSV output enabled: results.csv
+
+============================================================
+Testing GPU endpoint: http://internal-synthefy-api-private-f-api-1652544088.us-east-2.elb.amazonaws.com
+Model: sfm-moe-v1
+============================================================
+
+  Testing: GPU | Forecast=10 | History=12 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+
+================================================================================================
+Device | Forecast Length | Scenarios | Mean (s) | Median (s) | p95 (s) | Std Dev (s) | Total (s)
+================================================================================================
+GPU    |              10 |         1 | 2.8691   | 2.8584    | 2.9173 | 0.0277     | 28.6908 
+
+  Testing: GPU | Forecast=10 | History=12 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+GPU    |              10 |         2 | 6.4171   | 6.4263    | 6.7125 | 0.1986     | 64.1708 
+
+  Testing: GPU | Forecast=10 | History=12 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+GPU    |              10 |         4 | 9.2730   | 9.2972    | 9.8085 | 0.4793     | 92.7304 
+
+  Testing: GPU | Forecast=100 | History=120 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+GPU    |             100 |         1 | 5.9998   | 5.9508    | 6.2081 | 0.1283     | 59.9978 
+
+  Testing: GPU | Forecast=100 | History=120 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+GPU    |             100 |         2 | 10.0367  | 10.0127   | 10.2563 | 0.1275     | 100.3672
+
+  Testing: GPU | Forecast=100 | History=120 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+GPU    |             100 |         4 | 19.7974  | 19.5710   | 24.9975 | 3.3527     | 197.9739
+
+============================================================
+Testing CPU endpoint: http://internal-synthefy-api-private-fapg-1381866382.us-east-2.elb.amazonaws.com
+Model: sfm-moe-v1
+============================================================
+
+  Testing: CPU | Forecast=10 | History=12 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+CPU    |              10 |         1 | 8.2062   | 8.1699    | 9.1972 | 0.8327     | 82.0621 
+
+  Testing: CPU | Forecast=10 | History=12 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+CPU    |              10 |         2 | 17.3468  | 16.4194   | 19.5226 | 1.4086     | 173.4677
+
+  Testing: CPU | Forecast=10 | History=12 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+CPU    |              10 |         4 | 34.9811  | 33.7814   | 40.0494 | 2.5321     | 349.8113
+
+  Testing: CPU | Forecast=100 | History=120 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+CPU    |             100 |         1 | 40.0793  | 37.7621   | 50.4339 | 6.7657     | 400.7933
+
+  Testing: CPU | Forecast=100 | History=120 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+CPU    |             100 |         2 | 97.0150  | 83.8392   | 134.2001 | 20.4017    | 970.1503
+
+  Testing: CPU | Forecast=100 | History=120 | Scenarios=4
+    ✅ Completed: 9/10 successful runs
+CPU    |             100 |         4 | 328.6474 | 302.5973  | 551.1570 | 137.3245   | 2957.8269
+
+================================================================================================
+SUMMARY TABLE
+================================================================================================
+Device | Forecast Length | Scenarios | Mean (s) | Median (s) | p95 (s) | Std Dev (s) | Total (s)
+================================================================================================
+GPU    |              10 |         1 | 2.8691   | 2.8584    | 2.9173 | 0.0277     | 28.6908 
+GPU    |              10 |         2 | 6.4171   | 6.4263    | 6.7125 | 0.1986     | 64.1708 
+GPU    |              10 |         4 | 9.2730   | 9.2972    | 9.8085 | 0.4793     | 92.7304 
+GPU    |             100 |         1 | 5.9998   | 5.9508    | 6.2081 | 0.1283     | 59.9978 
+GPU    |             100 |         2 | 10.0367  | 10.0127   | 10.2563 | 0.1275     | 100.3672
+GPU    |             100 |         4 | 19.7974  | 19.5710   | 24.9975 | 3.3527     | 197.9739
+CPU    |              10 |         1 | 8.2062   | 8.1699    | 9.1972 | 0.8327     | 82.0621 
+CPU    |              10 |         2 | 17.3468  | 16.4194   | 19.5226 | 1.4086     | 173.4677
+CPU    |              10 |         4 | 34.9811  | 33.7814   | 40.0494 | 2.5321     | 349.8113
+CPU    |             100 |         1 | 40.0793  | 37.7621   | 50.4339 | 6.7657     | 400.7933
+CPU    |             100 |         2 | 97.0150  | 83.8392   | 134.2001 | 20.4017    | 970.1503
+CPU    |             100 |         4 | 328.6474 | 302.5973  | 551.1570 | 137.3245   | 2957.8269
+================================================================================================
+
+Results saved to CSV: results.csv
+
+============================================================
+Performance test completed!
+============================================================
+Synthefy Forecasting API Performance Test
+============================================================
+GPU Endpoint: http://internal-synthefy-api-private-f-api-1652544088.us-east-2.elb.amazonaws.com (model: sfm-moe-v1)
+CPU Endpoint: http://internal-synthefy-api-private-fapg-1381866382.us-east-2.elb.amazonaws.com (model: sfm-moe-v1)
+History Length: 20% more than forecast length (dynamic)
+Forecast Lengths: [2, 10, 100]
+Number of Scenarios: [1, 2, 4]
+Runs per test: 15 (discarding first 5)
+============================================================
+CSV output enabled: new-results.csv
+
+============================================================
+Testing GPU endpoint: http://internal-synthefy-api-private-f-api-1652544088.us-east-2.elb.amazonaws.com
+Model: sfm-moe-v1
+============================================================
+
+  Testing: GPU | Forecast=2 | History=2 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+
+================================================================================================
+Device | Forecast Length | Scenarios | Mean (s) | Median (s) | p95 (s) | Std Dev (s) | Total (s)
+================================================================================================
+GPU    |               2 |         1 | 0.7051   | 0.6634    | 0.8940 | 0.1164     | 7.0513  
+
+  Testing: GPU | Forecast=2 | History=2 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+GPU    |               2 |         2 | 1.1189   | 1.1169    | 1.1434 | 0.0180     | 11.1892 
+
+  Testing: GPU | Forecast=2 | History=2 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+GPU    |               2 |         4 | 2.0664   | 2.0199    | 2.2709 | 0.1266     | 20.6641 
+
+  Testing: GPU | Forecast=10 | History=12 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+GPU    |              10 |         1 | 2.7518   | 2.7668    | 2.9621 | 0.1303     | 27.5185 
+
+  Testing: GPU | Forecast=10 | History=12 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+GPU    |              10 |         2 | 5.6324   | 5.6598    | 5.9149 | 0.1877     | 56.3239 
+
+  Testing: GPU | Forecast=10 | History=12 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+GPU    |              10 |         4 | 15.0652  | 15.0610   | 15.6675 | 0.3804     | 150.6525
+
+  Testing: GPU | Forecast=100 | History=120 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+GPU    |             100 |         1 | 5.5738   | 5.6466    | 5.6847 | 0.1602     | 55.7378 
+
+  Testing: GPU | Forecast=100 | History=120 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+GPU    |             100 |         2 | 10.4467  | 10.2703   | 11.2758 | 0.4183     | 104.4671
+
+  Testing: GPU | Forecast=100 | History=120 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+GPU    |             100 |         4 | 21.5442  | 21.0076   | 23.8006 | 1.1493     | 215.4422
+
+============================================================
+Testing CPU endpoint: http://internal-synthefy-api-private-fapg-1381866382.us-east-2.elb.amazonaws.com
+Model: sfm-moe-v1
+============================================================
+
+  Testing: CPU | Forecast=2 | History=2 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+CPU    |               2 |         1 | 1.3212   | 1.2729    | 1.5159 | 0.1161     | 13.2121 
+
+  Testing: CPU | Forecast=2 | History=2 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+CPU    |               2 |         2 | 2.3784   | 2.3749    | 2.4000 | 0.0152     | 23.7840 
+
+  Testing: CPU | Forecast=2 | History=2 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+CPU    |               2 |         4 | 4.5683   | 4.5315    | 4.7524 | 0.1134     | 45.6830 
+
+  Testing: CPU | Forecast=10 | History=12 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+CPU    |              10 |         1 | 10.7595  | 10.2508   | 12.7379 | 0.9941     | 107.5951
+
+  Testing: CPU | Forecast=10 | History=12 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+CPU    |              10 |         2 | 18.4338  | 18.4103   | 18.6760 | 0.1444     | 184.3379
+
+  Testing: CPU | Forecast=10 | History=12 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+CPU    |              10 |         4 | 34.4862  | 34.4157   | 34.7967 | 0.1799     | 344.8621
+
+  Testing: CPU | Forecast=100 | History=120 | Scenarios=1
+    ✅ Completed: 10/10 successful runs
+CPU    |             100 |         1 | 44.4276  | 44.3143   | 44.9355 | 0.2977     | 444.2760
+
+  Testing: CPU | Forecast=100 | History=120 | Scenarios=2
+    ✅ Completed: 10/10 successful runs
+CPU    |             100 |         2 | 95.5356  | 88.1930   | 128.8223 | 22.0044    | 955.3562
+
+  Testing: CPU | Forecast=100 | History=120 | Scenarios=4
+    ✅ Completed: 10/10 successful runs
+CPU    |             100 |         4 | 199.8865 | 177.5503  | 279.0017 | 41.0291    | 1998.8652
+
+================================================================================================
+SUMMARY TABLE
+================================================================================================
+Device | Forecast Length | Scenarios | Mean (s) | Median (s) | p95 (s) | Std Dev (s) | Total (s)
+================================================================================================
+GPU    |               2 |         1 | 0.7051   | 0.6634    | 0.8940 | 0.1164     | 7.0513  
+GPU    |               2 |         2 | 1.1189   | 1.1169    | 1.1434 | 0.0180     | 11.1892 
+GPU    |               2 |         4 | 2.0664   | 2.0199    | 2.2709 | 0.1266     | 20.6641 
+GPU    |              10 |         1 | 2.7518   | 2.7668    | 2.9621 | 0.1303     | 27.5185 
+GPU    |              10 |         2 | 5.6324   | 5.6598    | 5.9149 | 0.1877     | 56.3239 
+GPU    |              10 |         4 | 15.0652  | 15.0610   | 15.6675 | 0.3804     | 150.6525
+GPU    |             100 |         1 | 5.5738   | 5.6466    | 5.6847 | 0.1602     | 55.7378 
+GPU    |             100 |         2 | 10.4467  | 10.2703   | 11.2758 | 0.4183     | 104.4671
+GPU    |             100 |         4 | 21.5442  | 21.0076   | 23.8006 | 1.1493     | 215.4422
+CPU    |               2 |         1 | 1.3212   | 1.2729    | 1.5159 | 0.1161     | 13.2121 
+CPU    |               2 |         2 | 2.3784   | 2.3749    | 2.4000 | 0.0152     | 23.7840 
+CPU    |               2 |         4 | 4.5683   | 4.5315    | 4.7524 | 0.1134     | 45.6830 
+CPU    |              10 |         1 | 10.7595  | 10.2508   | 12.7379 | 0.9941     | 107.5951
+CPU    |              10 |         2 | 18.4338  | 18.4103   | 18.6760 | 0.1444     | 184.3379
+CPU    |              10 |         4 | 34.4862  | 34.4157   | 34.7967 | 0.1799     | 344.8621
+CPU    |             100 |         1 | 44.4276  | 44.3143   | 44.9355 | 0.2977     | 444.2760
+CPU    |             100 |         2 | 95.5356  | 88.1930   | 128.8223 | 22.0044    | 955.3562
+CPU    |             100 |         4 | 199.8865 | 177.5503  | 279.0017 | 41.0291    | 1998.8652
+================================================================================================
+
+Results saved to CSV: new-results.csv
+
+============================================================
+Performance test completed!
+============================================================
