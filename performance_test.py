@@ -527,7 +527,7 @@ def main():
         {"name": "CPU", "url": args.cpu_url, "model": args.cpu_model},
     ]
 
-    forecast_lengths = [10, 100]
+    forecast_lengths = [2, 10, 100]
     num_scenarios_list = [1, 2, 4]
 
     print("Synthefy Forecasting API Performance Test")

@@ -10,7 +10,6 @@ and scenario counts.
 import argparse
 import re
 import sys
-from typing import List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -176,7 +175,7 @@ def create_visualization(
             # Label only for first scenario to avoid duplicates in legend
             label = device if i == 0 else ""
 
-            ax.bar(
+            bars = ax.bar(
                 scenario_base + device_offset,
                 values,
                 bar_width,
@@ -186,6 +185,20 @@ def create_visualization(
                 edgecolor="black",
                 linewidth=0.5,
             )
+            
+            # Add latency labels on top of each bar
+            for bar, value in zip(bars, values):
+                if value > 0:  # Only label non-zero bars
+                    height = bar.get_height()
+                    ax.text(
+                        bar.get_x() + bar.get_width() / 2,
+                        height,
+                        f"{value:.2f}",
+                        ha="center",
+                        va="bottom",
+                        fontsize=8,
+                        fontweight="bold",
+                    )
 
     # Customize the plot
     ax.set_xlabel("Forecast Length", fontsize=12, fontweight="bold")
@@ -201,6 +214,19 @@ def create_visualization(
     ax.set_xticks(x)
     ax.set_xticklabels(forecast_lengths)
 
+    # Add "Lower is better" note in top right corner
+    ax.text(
+        0.98,
+        0.98,
+        "Lower is better",
+        transform=ax.transAxes,
+        ha="right",
+        va="top",
+        fontsize=10,
+        style="italic",
+        bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.8, edgecolor="gray"),
+    )
+
     # Add legend
     ax.legend(
         title="Device",
@@ -214,7 +240,10 @@ def create_visualization(
     ax.grid(axis="y", alpha=0.3, linestyle="--", linewidth=0.5)
 
     # Set y-axis to start from 0 for better comparison
+    # Add top margin to accommodate bar labels
     ax.set_ylim(bottom=0)
+    y_max = ax.get_ylim()[1]
+    ax.set_ylim(top=y_max * 1.1)  # Add 10% margin at top for labels
 
     # Add scenario count annotations below x-axis labels
     # This helps identify which bars correspond to which scenario count
