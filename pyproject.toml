@@ -25,6 +25,7 @@ dependencies = [
     "matplotlib>=3.10.7",
     "seaborn>=0.13.2",
     "ipython>=9.7.0",
+    "requests>=2.32.5",
 ]
 
 [project.optional-dependencies]
