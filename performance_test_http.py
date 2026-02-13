@@ -301,7 +301,7 @@ def print_single_result(result: dict, is_first: bool = False) -> None:
     """Print one result row; print header on first row."""
     header = (
         "Device | Forecast Length | Scenarios | Mean (s) | "
-        "Median (s) | p95 (s) | Std Dev (s) | Total (s)"
+        "Median (s) | p95 (s) | Std Dev (s) | Total (s) | Req/min"
     )
     if is_first:
         print("\n" + "=" * len(header))
@@ -312,10 +312,12 @@ def print_single_result(result: dict, is_first: bool = False) -> None:
     forecast_length = result["forecast_length"]
     num_scenarios = result["num_scenarios"]
     stats = format_statistics(result["stats"])
+    rpm = throughput_requests_per_minute(result["stats"])
+    rpm_str = f"{rpm:.1f}" if rpm is not None else "N/A"
     row = (
         f"{device:6s} | {forecast_length:15d} | {num_scenarios:9d} | "
         f"{stats['mean']:8s} | {stats['median']:9s} | {stats['p95']:6s} | "
-        f"{stats['std_dev']:10s} | {stats['total']:8s}"
+        f"{stats['std_dev']:10s} | {stats['total']:8s} | {rpm_str:>7s}"
     )
     print(row)
 
@@ -324,7 +326,7 @@ def print_results_table(results: List[dict]) -> None:
     """Print summary table of all results."""
     header = (
         "Device | Forecast Length | Scenarios | Mean (s) | "
-        "Median (s) | p95 (s) | Std Dev (s) | Total (s)"
+        "Median (s) | p95 (s) | Std Dev (s) | Total (s) | Req/min"
     )
     print("\n" + "=" * len(header))
     print("SUMMARY TABLE")
@@ -336,13 +338,23 @@ def print_results_table(results: List[dict]) -> None:
         forecast_length = result["forecast_length"]
         num_scenarios = result["num_scenarios"]
         stats = format_statistics(result["stats"])
+        rpm = throughput_requests_per_minute(result["stats"])
+        rpm_str = f"{rpm:.1f}" if rpm is not None else "N/A"
         row = (
             f"{device:6s} | {forecast_length:15d} | {num_scenarios:9d} | "
             f"{stats['mean']:8s} | {stats['median']:9s} | {stats['p95']:6s} | "
-            f"{stats['std_dev']:10s} | {stats['total']:8s}"
+            f"{stats['std_dev']:10s} | {stats['total']:8s} | {rpm_str:>7s}"
         )
         print(row)
     print("=" * len(header))
+
+
+def throughput_requests_per_minute(stats: dict) -> Optional[float]:
+    """Throughput as requests per minute (60 / mean latency). None if mean is missing or zero."""
+    mean = stats.get("mean")
+    if mean is None or mean <= 0 or mean == float("inf"):
+        return None
+    return 60.0 / mean
 
 
 def get_csv_fieldnames() -> List[str]:
@@ -355,6 +367,7 @@ def get_csv_fieldnames() -> List[str]:
         "p95",
         "std_dev",
         "total",
+        "requests_per_minute",
         "success",
     ]
 
@@ -368,6 +381,7 @@ def initialize_csv_file(output_file: str) -> None:
 
 def append_result_to_csv(result: dict, output_file: str) -> None:
     stats = result["stats"]
+    rpm = throughput_requests_per_minute(stats)
     row = {
         "device": result["device"],
         "forecast_length": result["forecast_length"],
@@ -377,6 +391,7 @@ def append_result_to_csv(result: dict, output_file: str) -> None:
         "p95": stats.get("p95") if stats.get("p95") is not None else "",
         "std_dev": stats.get("std_dev") if stats.get("std_dev") is not None else "",
         "total": stats.get("total") if stats.get("total") is not None else "",
+        "requests_per_minute": f"{rpm:.4f}" if rpm is not None else "",
         "success": result["success"],
     }
     with open(output_file, "a", newline="") as f:
@@ -391,6 +406,7 @@ def save_results_to_csv(results: List[dict], output_file: str) -> None:
         writer.writeheader()
         for result in results:
             stats = result["stats"]
+            rpm = throughput_requests_per_minute(stats)
             row = {
                 "device": result["device"],
                 "forecast_length": result["forecast_length"],
@@ -400,6 +416,7 @@ def save_results_to_csv(results: List[dict], output_file: str) -> None:
                 "p95": stats.get("p95") if stats.get("p95") is not None else "",
                 "std_dev": stats.get("std_dev") if stats.get("std_dev") is not None else "",
                 "total": stats.get("total") if stats.get("total") is not None else "",
+                "requests_per_minute": f"{rpm:.4f}" if rpm is not None else "",
                 "success": result["success"],
             }
             writer.writerow(row)
