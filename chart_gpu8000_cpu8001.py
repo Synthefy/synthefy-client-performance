@@ -66,7 +66,7 @@ def create_chart(df: pd.DataFrame, output_path: str, title: str | None = None) -
                         fontweight="bold",
                     )
 
-    ax.set_xlabel("Forecast horizon", fontsize=14, fontweight="bold")
+    ax.set_xlabel("Forecast horizon", fontsize=14, fontweight="bold", labelpad=42)
     ax.set_ylabel("Throughput (requests per minute)", fontsize=14, fontweight="bold")
     ax.set_title(
         title or "GPU vs CPU pool — Throughput by forecast length and scenario count",
@@ -91,7 +91,7 @@ def create_chart(df: pd.DataFrame, output_path: str, title: str | None = None) -
         va="bottom",
         fontsize=11,
         style="italic",
-        color="gray",
+        color="black",
     )
     # Scenario labels below x-axis
     trans = ax.get_xaxis_transform()
@@ -102,7 +102,7 @@ def create_chart(df: pd.DataFrame, output_path: str, title: str | None = None) -
         for fl_idx in range(len(forecast_lengths)):
             ax.text(
                 scenario_base[fl_idx],
-                -0.06,
+                -0.11,
                 f"{scenario} scenario{'s' if scenario != 1 else ''}",
                 ha="center",
                 va="top",
@@ -110,7 +110,7 @@ def create_chart(df: pd.DataFrame, output_path: str, title: str | None = None) -
                 transform=trans,
                 color="gray",
             )
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0.08, 1, 1))
     fig.savefig(output_path, dpi=150, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print(f"Saved: {output_path}")
